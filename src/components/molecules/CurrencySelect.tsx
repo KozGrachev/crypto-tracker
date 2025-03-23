@@ -30,19 +30,24 @@ const CurrencySelect = () => {
     router.replace(`?${newParams.toString()}`, { scroll: false });
   };
 
+  const displayOption = (currency: Currency) => (
+    <div className="flex items-center">
+      <span className="mr-2">{currencySymbols[currency]}</span>
+      <span>{currency.toUpperCase()}</span>
+    </div>
+  );
+
   return (
     <div className="w-32">
       <Select
         value={selectedCurrency}
         label='Convert to:'
         onChange={handleCurrencyChange}
+        selectedOption={displayOption(selectedCurrency)}
       >
-        {Object.entries(currencySymbols).map(([currency, symbol]) => (
-          <SelectItem key={currency} value={currency as Currency}>
-            <div className="flex items-center">
-              <span className="mr-2">{symbol}</span>
-              <span>{currency.toUpperCase()}</span>
-            </div>
+        {Object.entries(currencySymbols).map(([currency]) => (
+          <SelectItem key={currency} value={currency}>
+            {displayOption(currency as Currency)}
           </SelectItem>
         ))}
       </Select>
