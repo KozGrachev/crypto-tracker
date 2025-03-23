@@ -1,5 +1,8 @@
 import { Suspense } from 'react';
-import CoinTable from '../components/organisms/CoinTable';
+import CoinTable from '@/components/organisms/CoinTable';
+import CurrencySelect from '@/components/molecules/CurrencySelect';
+import { SearchParams } from 'next/dist/server/request/search-params';
+import { defaultCurrency } from '@/constants/defaults';
 
 // Type definition for coin data
 export interface Coin {
@@ -81,16 +84,16 @@ async function CoinData ({ currency = 'usd' }: { currency?: string }) {
 }
 
 // Main Page Component
-export default function CryptoTracker () {
-  // Set default currency to USD
-  const defaultCurrency = 'usd';
+export default function CryptoTracker({ searchParams }: { searchParams: SearchParams }) {
+  // Get currency from search params or use 'usd' as default
+  const currency = (searchParams.currency as string) || defaultCurrency;
 
   return (
     <main className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-6">Cryptocurrency Market Tracker</h1>
-
+      <CurrencySelect />
       <Suspense fallback={<LoadingCoins />}>
-        <CoinData currency={defaultCurrency} />
+        <CoinData currency={currency} />
       </Suspense>
     </main>
   );
