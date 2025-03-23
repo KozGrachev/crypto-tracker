@@ -53,7 +53,7 @@ const CoinTable: React.FC<CoinTableProps> = ({ coins, currency }) => {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const columnHelper = createColumnHelper<Coin>();
 
-  const columns = useMemo(
+  const columns = useMemo( //! move to custom hook
     () => [
       columnHelper.accessor('market_cap_rank', {
         header: 'Rank',
@@ -64,12 +64,13 @@ const CoinTable: React.FC<CoinTableProps> = ({ coins, currency }) => {
         cell: (info) => (
           <div className="flex items-center space-x-2">
             <div className="flex-shrink-0 w-8 h-8 relative">
-              {/* <Image
+              <Image
                 src={info.row.original.image}
                 alt={info.getValue()}
                 fill
+                sizes='32px' //! is this optimised?
                 className="object-contain rounded-full"
-              /> */}
+              />
             </div>
             <div>
               <p className="font-medium">{info.getValue()}</p>
