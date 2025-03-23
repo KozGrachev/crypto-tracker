@@ -2,7 +2,8 @@
 
 import { defaultCurrency } from '@/constants/defaults';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Select, SelectItem } from '@/components/atoms/Select';
+import { Select } from '@/components/atoms/Select';
+import { SelectItem } from '@/components/atoms/SelectItem';
 
 export type Currency = 'USD' | 'EUR' | 'GBP';
 
