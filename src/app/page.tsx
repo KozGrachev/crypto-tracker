@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import CoinTable from '../../components/organisms/CoinTable';
+import CoinTable from '../components/organisms/CoinTable';
 
 // Type definition for coin data
 export interface Coin {
