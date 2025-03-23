@@ -59,7 +59,7 @@ function ErrorDisplay ({ error }: { error: Error }) {
 }
 
 // Server Component to fetch data
-async function CoinData ({ currency = 'usd' }: { currency?: string }) {
+async function CoinData ({ currency = defaultCurrency }: { currency?: string }) {
   try {
     // Fetch top 50 cryptocurrencies from CoinGecko API
     const response = await fetch(
@@ -84,8 +84,7 @@ async function CoinData ({ currency = 'usd' }: { currency?: string }) {
 }
 
 // Main Page Component
-export default function CryptoTracker({ searchParams }: { searchParams: SearchParams }) {
-  // Get currency from search params or use 'usd' as default
+export default function CryptoTracker ({ searchParams }: { searchParams: SearchParams }) {
   const currency = (searchParams.currency as string) || defaultCurrency;
 
   return (

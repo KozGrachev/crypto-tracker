@@ -1,3 +1,3 @@
 import { Currency } from "@/components/molecules/CurrencySelect";
 
-export const defaultCurrency: Currency = 'gbp';
+export const defaultCurrency: Currency = 'GBP';
