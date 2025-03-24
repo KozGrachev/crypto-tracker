@@ -24,7 +24,6 @@ const Stack: React.FC<StackProps> = ({
     })
     : childrenArray;
 
-  // Use Tailwind classes to set the flex direction.
   const flexDirection = orientation === 'vertical' ? 'flex-col ' : 'flex-row';
 
   return (
