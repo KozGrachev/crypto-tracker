@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🪙 Crypto Tracker
 
-## Getting Started
+A simple crypto market tracker built with **Next.js 13 App Router**, showing the top 50 coins by market cap. You can filter by name or symbol, switch currency, and click a row to get more info about a coin in a modal.
 
-First, run the development server:
+---
+
+## ✨ Features
+
+- ✅ View top 50 cryptocurrencies from the CoinGecko API
+- 🔍 Filter coins by name or symbol
+- 💱 Toggle between USD, EUR, and GBP
+- 🪪 Click on a coin to view more detailed info in a modal
+- ♿️ Accessible components thanks to Headless UI
+- 📊 Sortable table powered by TanStack Table
+
+---
+
+## 🧰 Tech Stack
+
+- **Next.js 13+ App Router**
+- **TypeScript**
+- **Tailwind CSS**
+- **TanStack Table v8**
+- **TanStack React Query** – for fetching & caching
+- **Headless UI** – for accessible UI primitives
+- **clsx** – for conditional class names
+- **tailwind-merge** – to merge and dedupe Tailwind classes
+
+---
+
+## 🚀 Getting Started
 
 ```bash
-npm run dev
-# or
+# Clone the repo
+git clone https://github.com/your-username/crypto-tracker.git
+cd crypto-tracker
+
+# Install dependencies
+yarn
+
+# Run the dev server
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then head to http://localhost:3000 to check it out.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📦 Future Ideas
+ Deploy to Vercel
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+ Add pagination or infinite scroll
 
-## Learn More
+ Persist selected currency in local storage
 
-To learn more about Next.js, take a look at the following resources:
+ Show charts for coin price history
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+ Mobile layout optimisations
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
