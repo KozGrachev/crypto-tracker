@@ -53,7 +53,7 @@ const CoinInfoModal: React.FC<CoinInfoModalProps> = ({ coinId, isOpen, onClose }
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <DialogPanel className="fixed inset-0 transition-opacity bg-black bg-opacity-30" />
+            <DialogPanel className="fixed inset-0 transition-opacity backdrop-blur-md bg-opacity-30" />
           </TransitionChild>
 
           {/* Trick to center modal contents */}
