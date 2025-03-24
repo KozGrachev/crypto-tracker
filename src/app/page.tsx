@@ -1,8 +1,7 @@
 import { Suspense } from 'react';
-import CoinTable from '@/components/organisms/CoinTable';
-import CurrencySelect from '@/components/molecules/CurrencySelect';
 import { SearchParams } from 'next/dist/server/request/search-params';
 import { defaultCurrency } from '@/constants/defaults';
+import CoinTableWrapper from '@/components/organisms/TableWrapper';
 
 // Type definition for coin data
 export interface Coin {
@@ -73,10 +72,7 @@ async function CoinData ({ currency = defaultCurrency }: { currency?: string }) 
 
     const coins: Coin[] = await response.json();
 
-    // This component will be created later
-    return <>
-      <CoinTable coins={coins} currency={currency} />
-    </>;
+    return <CoinTableWrapper coins={coins} currency={currency} />;
   } catch (error) {
     console.error('Error fetching cryptocurrency data:', error);
     return <ErrorDisplay error={error instanceof Error ? error : new Error('Unknown error occurred')} />;
@@ -90,7 +86,6 @@ export default function CryptoTracker ({ searchParams }: { searchParams: SearchP
   return (
     <main className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-6">Cryptocurrency Market Tracker</h1>
-      <CurrencySelect />
       <Suspense fallback={<LoadingCoins />}>
         <CoinData currency={currency} />
       </Suspense>
