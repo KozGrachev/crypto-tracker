@@ -10,50 +10,19 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import Image from 'next/image';
-
-// Types for the component props and coin data
-interface Coin {
-  id: string;
-  market_cap_rank: number;
-  name: string;
-  symbol: string;
-  image: string;
-  current_price: number;
-  price_change_percentage_24h: number;
-  market_cap: number;
-}
+import { formatCurrency, formatLargeNumber } from '@/utils/formatters';
+import { Coin } from '@/types/coin';
 
 interface CoinTableProps {
   coins: Coin[];
   currency: string;
 }
 
-// Helper function to format currency
-const formatCurrency = (value: number, currency: string): string => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: currency,
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(value);
-};
-
-// Helper function to format large numbers (like market cap)
-const formatLargeNumber = (value: number, currency: string): string => {
-  const formatter = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: currency,
-    notation: 'compact',
-    compactDisplay: 'short',
-  });
-  return formatter.format(value);
-};
-
 const CoinTable: React.FC<CoinTableProps> = ({ coins, currency }) => {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const columnHelper = createColumnHelper<Coin>();
 
-  const columns = useMemo( //! move to custom hook
+  const columns = useMemo(
     () => [
       columnHelper.accessor('market_cap_rank', {
         header: 'Rank',
