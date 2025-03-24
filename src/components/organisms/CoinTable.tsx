@@ -13,6 +13,7 @@ import { formatCurrency, formatLargeNumber } from '@/utils/formatters';
 import { Coin } from '@/types/coin';
 import PriceChangeText from '../atoms/PriceChangeText';
 import CoinIdentity from '../molecules/CoinIdentity';
+import CoinInfoModal from './CoinInfoModal';
 
 interface CoinTableProps {
   coins: Coin[];
@@ -21,6 +22,14 @@ interface CoinTableProps {
 
 const CoinTable: React.FC<CoinTableProps> = ({ coins, currency }) => {
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [selectedCoinId, setSelectedCoinId] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleRowClick = (coinId: string) => {
+    setSelectedCoinId(coinId);
+    setIsModalOpen(true);
+  };
+
   const columnHelper = createColumnHelper<Coin>();
 
   const columns = useMemo(
@@ -73,56 +82,68 @@ const CoinTable: React.FC<CoinTableProps> = ({ coins, currency }) => {
   }
 
   return (
-    <div className="overflow-x-auto shadow-md rounded-lg dark:bg-gray-800">
-      <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-        <thead className="bg-gray-50 dark:bg-gray-700">
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <th
-                  key={header.id}
-                  scope="col"
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer select-none"
-                  onClick={header.column.getToggleSortingHandler()}
-                >
-                  <div className="flex items-center space-x-1">
-                    <span>
-                      {flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
-                    </span>
-                    <span>
-                      {{
-                        asc: ' 🔼',
-                        desc: ' 🔽',
-                      }[header.column.getIsSorted() as string] ?? null}
-                    </span>
-                  </div>
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody className="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
-          {table.getRowModel().rows.map((row) => (
-            <tr
-              key={row.id}
-              className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-            >
-              {row.getVisibleCells().map((cell) => (
-                <td
-                  key={cell.id}
-                  className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300"
-                >
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <>
+      <div className="overflow-x-auto shadow-md rounded-lg dark:bg-gray-800">
+        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+          <thead className="bg-gray-50 dark:bg-gray-700">
+            {table.getHeaderGroups().map((headerGroup) => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <th
+                    key={header.id}
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer select-none"
+                    onClick={header.column.getToggleSortingHandler()}
+                  >
+                    <div className="flex items-center space-x-1">
+                      <span>
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                      </span>
+                      <span>
+                        {{
+                          asc: ' 🔼',
+                          desc: ' 🔽',
+                        }[header.column.getIsSorted() as string] ?? null}
+                      </span>
+                    </div>
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
+            {table.getRowModel().rows.map((row) => (
+              <tr
+                key={row.id}
+                onClick={() => handleRowClick(row.original.id)}
+                className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+              >
+                {row.getVisibleCells().map((cell) => (
+                  <td
+                    key={cell.id}
+                    className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300"
+                  >
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {
+        isModalOpen && selectedCoinId && (
+          <CoinInfoModal
+            coinId={selectedCoinId}
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+          />
+        )
+      }
+    </>
   );
 };
 
