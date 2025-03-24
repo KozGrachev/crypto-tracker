@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   createColumnHelper,
   flexRender,
@@ -19,8 +19,19 @@ interface CoinTableProps {
 }
 
 const CoinTable: React.FC<CoinTableProps> = ({ coins, currency }) => {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [searchQuery, setSearchQuery] = useState('');
   const columnHelper = createColumnHelper<Coin>();
+
+  const filteredCoins = useMemo(() => {
+    const query = searchQuery.toLowerCase().trim();
+    if (!query) return coins;
+
+    return coins.filter((coin) =>
+      coin.name.toLowerCase().includes(query) ||
+      coin.symbol.toLowerCase().includes(query)
+    );
+  }, [coins, searchQuery]);
 
   const columns = useMemo(
     () => [
@@ -37,7 +48,7 @@ const CoinTable: React.FC<CoinTableProps> = ({ coins, currency }) => {
                 src={info.row.original.image}
                 alt={info.getValue()}
                 fill
-                sizes='32px' //! is this optimised?
+                sizes="32px"
                 className="object-contain rounded-full"
               />
             </div>
@@ -61,9 +72,8 @@ const CoinTable: React.FC<CoinTableProps> = ({ coins, currency }) => {
           const isPositive = value >= 0;
           return (
             <span
-              className={`${
-                isPositive ? 'text-green-500' : 'text-red-500'
-              } font-medium`}
+              className={`${isPositive ? 'text-green-500' : 'text-red-500'
+                } font-medium`}
             >
               {isPositive ? '+' : ''}
               {value.toFixed(2)}%
@@ -80,7 +90,7 @@ const CoinTable: React.FC<CoinTableProps> = ({ coins, currency }) => {
   );
 
   const table = useReactTable({
-    data: coins,
+    data: filteredCoins,
     columns,
     state: {
       sorting,
@@ -91,7 +101,7 @@ const CoinTable: React.FC<CoinTableProps> = ({ coins, currency }) => {
   });
 
   // If no coins data is available
-  if (!coins.length) {
+  if (!coins.length && !searchQuery) {
     return (
       <div className="p-4 text-center text-gray-500 dark:text-gray-400">
         No cryptocurrency data available.
@@ -101,57 +111,72 @@ const CoinTable: React.FC<CoinTableProps> = ({ coins, currency }) => {
 
   return (
     <div className="overflow-x-auto shadow-md rounded-lg dark:bg-gray-800">
-      <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-        <thead className="bg-gray-50 dark:bg-gray-700">
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <th
-                  key={header.id}
-                  scope="col"
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer select-none"
-                  onClick={header.column.getToggleSortingHandler()}
-                >
-                  <div className="flex items-center space-x-1">
-                    <span>
-                      {flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
-                    </span>
-                    <span>
-                      {{
-                        asc: ' 🔼',
-                        desc: ' 🔽',
-                      }[header.column.getIsSorted() as string] ?? null}
-                    </span>
-                  </div>
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody className="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
-          {table.getRowModel().rows.map((row) => (
-            <tr
-              key={row.id}
-              className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-            >
-              {row.getVisibleCells().map((cell) => (
-                <td
-                  key={cell.id}
-                  className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300"
-                >
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div className="p-4">
+        <input
+          type="text"
+          placeholder="Filter by name or symbol..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full max-w-sm px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        />
+      </div>
+
+      {filteredCoins.length === 0 ? (
+        <div className="p-4 text-center text-gray-500 dark:text-gray-400">
+          No coins match your search.
+        </div>
+      ) : (
+        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+          <thead className="bg-gray-50 dark:bg-gray-700">
+            {table.getHeaderGroups().map((headerGroup) => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <th
+                    key={header.id}
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer select-none"
+                    onClick={header.column.getToggleSortingHandler()}
+                  >
+                    <div className="flex items-center space-x-1">
+                      <span>
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                      </span>
+                      <span>
+                        {{
+                          asc: ' 🔼',
+                          desc: ' 🔽',
+                        }[header.column.getIsSorted() as string] ?? null}
+                      </span>
+                    </div>
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
+            {table.getRowModel().rows.map((row) => (
+              <tr
+                key={row.id}
+                className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+              >
+                {row.getVisibleCells().map((cell) => (
+                  <td
+                    key={cell.id}
+                    className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300"
+                  >
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 };
 
 export default CoinTable;
-
