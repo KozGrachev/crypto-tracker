@@ -9,9 +9,10 @@ import {
   SortingState,
   useReactTable,
 } from '@tanstack/react-table';
-import Image from 'next/image';
 import { formatCurrency, formatLargeNumber } from '@/utils/formatters';
 import { Coin } from '@/types/coin';
+import PriceChangeText from '../atoms/PriceChangeText';
+import CoinIdentity from '../molecules/CoinIdentity';
 
 interface CoinTableProps {
   coins: Coin[];
@@ -31,23 +32,11 @@ const CoinTable: React.FC<CoinTableProps> = ({ coins, currency }) => {
       columnHelper.accessor('name', {
         header: 'Name',
         cell: (info) => (
-          <div className="flex items-center space-x-2">
-            <div className="flex-shrink-0 w-8 h-8 relative">
-              <Image
-                src={info.row.original.image}
-                alt={info.getValue()}
-                fill
-                sizes="32px"
-                className="object-contain rounded-full"
-              />
-            </div>
-            <div>
-              <p className="font-medium">{info.getValue()}</p>
-              <p className="text-xs text-gray-500 dark:text-gray-400 uppercase">
-                {info.row.original.symbol}
-              </p>
-            </div>
-          </div>
+          <CoinIdentity
+            name={info.getValue()}
+            symbol={info.row.original.symbol}
+            image={info.row.original.image}
+          />
         ),
       }),
       columnHelper.accessor('current_price', {
@@ -56,19 +45,7 @@ const CoinTable: React.FC<CoinTableProps> = ({ coins, currency }) => {
       }),
       columnHelper.accessor('price_change_percentage_24h', {
         header: '24h Change',
-        cell: (info) => {
-          const value = info.getValue();
-          const isPositive = value >= 0;
-          return (
-            <span
-              className={`${isPositive ? 'text-green-500' : 'text-red-500'
-                } font-medium`}
-            >
-              {isPositive ? '+' : ''}
-              {value.toFixed(2)}%
-            </span>
-          );
-        },
+        cell: (info) => <PriceChangeText value={info.getValue()} />,
       }),
       columnHelper.accessor('market_cap', {
         header: 'Market Cap',

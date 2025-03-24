@@ -15,7 +15,7 @@ export interface SelectProps<T> {
   disabled?: boolean;
 }
 
-export function Select<T> ({
+export const Select = <T,>({
   value,
   onChange,
   children,
@@ -23,7 +23,7 @@ export function Select<T> ({
   selectedOption,
   className,
   disabled = false,
-}: SelectProps<T>) {
+}: SelectProps<T>) => {
   return (
     <Field className={twMerge("relative w-full p-3", className)}>
       <div className="flex">
@@ -58,4 +58,4 @@ export function Select<T> ({
       </div>
     </Field>
   );
-}
+};

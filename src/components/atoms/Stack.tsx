@@ -28,7 +28,7 @@ const Stack: React.FC<StackProps> = ({
   const flexDirection = orientation === 'vertical' ? 'flex-col ' : 'flex-row';
 
   return (
-    <div className={clsx('flex items-center', flexDirection, `gap-${gap}`, className)}>
+    <div className={clsx('flex items-center', flexDirection, gap && `gap-${gap}`, className)}>
       {content}
     </div>
   );
